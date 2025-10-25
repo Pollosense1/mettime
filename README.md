@@ -1,3 +1,15 @@
+# METTIME
+
+React app with Supabase and Firebase.
+
+## Scripts
+- npm start
+- npm test
+- npm run build
+
+## Env
+Copy .env.example to .env and fill your keys.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
