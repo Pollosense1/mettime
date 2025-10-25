@@ -23,24 +23,27 @@ function App() {
   const canSeeHistory = !!user?.email && ALLOWED_HISTORY_USERS.has(user.email.toLowerCase());
 
   useEffect(() => {
-    let mounted = true;
+  let mounted = true;
 
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!mounted) return;
-      setUser(session?.user ?? null);
-      setLoading(false);
-    })();
+  (async () => {
+    try {
+      // Always start on Login: clear any locally persisted session on first load
+      await supabase.auth.signOut({ scope: 'local' });
+    } catch {}
+    if (!mounted) return;
+    setUser(null);
+    setLoading(false);
+  })();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    setUser(session?.user ?? null);
+  });
 
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
-  }, []);
+  return () => {
+    mounted = false;
+    subscription.unsubscribe();
+  };
+}, []);
 
   useEffect(() => {
     const clearLocalSessionOnUnload = () => {
