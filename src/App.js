@@ -14,6 +14,10 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [page, setPage] = useState('landing');
 
+  const missingEnv =
+    !process.env.REACT_APP_SUPABASE_URL ||
+    !process.env.REACT_APP_SUPABASE_ANON_KEY;
+
   // Whitelist: only these emails can see "Historial"
   const ALLOWED_HISTORY_USERS = new Set([
     'fransvetlana@gmail.com',
@@ -75,6 +79,15 @@ function App() {
 
   if (!user) {
     return <Login />;
+  }
+
+  if (missingEnv) {
+    return (
+      <div style={{ padding: 24 }}>
+        Missing Supabase configuration.
+        Set REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_ANON_KEY in Vercel → Settings → Environment Variables, then redeploy.
+      </div>
+    );
   }
 
   return (
